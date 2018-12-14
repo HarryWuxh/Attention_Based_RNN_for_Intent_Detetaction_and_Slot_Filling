@@ -69,8 +69,8 @@ class Model:
         # labelling logits
         eos_time_slice = tf.ones([self.batch_size], dtype=tf.int32, name='EOS') * 2 # index of O_PLACEHOLDER is 2
         pad_time_slice = tf.zeros([self.batch_size], dtype=tf.int32, name='PAD') # index of PAD_PLACEHOLDER is 0
-        # eos_step_embedded = tf.nn.embedding_lookup(self.embeddings, eos_time_slice)
-        # pad_step_embedded = tf.nn.embedding_lookup(self.embeddings, pad_time_slice)
+        #eos_step_embedded = tf.nn.embedding_lookup(self.embeddings, eos_time_slice)
+        #pad_step_embedded = tf.nn.embedding_lookup(self.embeddings, pad_time_slice)
 
         # replace outputs from previous step in initial_fn with the index of O_PLACEHOLDER
         init_step_input = tf.ones([self.batch_size, self.label_vocab_size], dtype=tf.float32) * 2 
@@ -97,7 +97,7 @@ class Model:
             element_finished = (time >= self.encoder_inputs_actual_length)
             all_finished = tf.reduce_all(element_finished)
 
-            next_inputs = tf.cond(all_finished, lambda: pad_step_embedded, lambda: next_inputs)
+            next_inputs = tf.cond(all_finished, lambda: pad_step_input, lambda: next_inputs)
             next_state = state
 
             return element_finished, next_inputs, next_state
